@@ -1,0 +1,47 @@
+---
+description: Security & compliance rules from Canopy (canopy-mvp, locked)
+globs:
+alwaysApply: true
+---
+
+# Security & Compliance
+
+> ⚠️ LOCKED — These rules cannot be overridden.
+
+## Injection Prevention
+
+<!-- Source: canopy-mvp (org) -->
+### Parameterized queries only
+NEVER concatenate user input into SQL/NoSQL/LDAP queries. ALWAYS use parameterized queries (`$1`, `?`, `:param`), prepared statements, or ORM bindings. Flag: `query("SELECT * FROM users WHERE id = " + id)`, f-strings in SQL, `${variable}` in queries. Use instead: `query("SELECT * FROM users WHERE id = $1", [id])`.
+
+## Data Privacy & PII
+
+<!-- Source: canopy-mvp (org) -->
+### Never disable TLS/SSL verification
+Check for: `rejectUnauthorized: false`, `verify=False`, `InsecureSkipVerify: true`, `NODE_TLS_REJECT_UNAUTHORIZED=0`.
+Flag as CRITICAL if found in any HTTP client, database connection, or API call.
+Fix: use proper certificate chains. For local dev, use mkcert to create locally-trusted certificates.
+Never accept self-signed certificates in application code. Disabling TLS makes all traffic vulnerable to interception.
+
+<!-- Source: canopy-mvp (org) -->
+### Encrypt sensitive data at rest and in transit
+Check for: plaintext password storage, unencrypted database connections, HTTP (not HTTPS) API calls.
+Required: TLS 1.2+ for all network communication, AES-256 or equivalent for storage.
+Passwords: always bcrypt, scrypt, or argon2 with appropriate work factors. Never MD5 or SHA for passwords.
+Never implement custom cryptographic algorithms. Use established libraries (crypto, libsodium, etc.).
+
+## Authorization & Access Control
+
+<!-- Source: canopy-mvp (org) -->
+### Authorization on every endpoint
+Check for: API endpoints that check authentication (who you are) but skip authorization (what you can do).
+Flag: missing ownership checks on object-level routes (`GET/PUT/DELETE /:id`), admin endpoints without role verification.
+Required: verify the authenticated caller is authorized for the specific operation on the specific resource.
+Never rely on client-side route guards as the only access control. Enforce server-side.
+BOLA/IDOR (accessing other users' data by changing an ID) is the #1 API vulnerability.
+
+## Destructive Operations
+
+<!-- Source: canopy-mvp (org) -->
+### No unguarded destructive operations
+NEVER execute DELETE, DROP, rm -rf, git push --force, or git reset --hard without explicit user confirmation. MUST implement soft deletes, provide rollback scripts for migrations, and require confirmation flags for all destructive operations. Example: Use UPDATE is_deleted=true instead of DELETE.
