@@ -1,0 +1,35 @@
+---
+description: Architecture & pattern standards from Canopy (canopy-mvp)
+globs:
+alwaysApply: true
+---
+
+# Architecture & Patterns
+
+<!-- Source: canopy-mvp (org) -->
+## Use designated framework
+Use designated framework — enforce this standard across all code and AI-generated output.
+
+<!-- Source: canopy-mvp (org) -->
+## Structured error handling
+Structured error handling — enforce this standard across all code and AI-generated output.
+
+<!-- Source: canopy-mvp (org) -->
+## Structured logging
+Structured logging — enforce this standard across all code and AI-generated output.
+
+<!-- Source: canopy-mvp (org) -->
+## Input validation on every endpoint
+Input validation on every endpoint — enforce this standard across all code and AI-generated output.
+
+<!-- Source: canopy-mvp (org) -->
+## API versioning
+API versioning — enforce this standard across all code and AI-generated output.
+
+<!-- Source: canopy-mvp (org) -->
+## Unit test coverage
+Unit test coverage — enforce this standard across all code and AI-generated output.
+
+<!-- Source: canopy-mvp (org) -->
+## Code organization standards
+Code organization standards — enforce this standard across all code and AI-generated output.
