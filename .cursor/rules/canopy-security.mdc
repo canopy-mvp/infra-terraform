@@ -1,0 +1,47 @@
+---
+description: Security & compliance rules from Canopy (canopy-mvp, locked)
+globs:
+alwaysApply: true
+---
+
+# Security & Compliance
+
+> ⚠️ LOCKED — These rules cannot be overridden.
+
+## Injection Prevention
+
+<!-- Source: canopy-mvp (org) -->
+### Parameterized queries only
+Check for: SQL queries built with string concatenation or template literals containing user input.
+Flag: `query("SELECT * FROM users WHERE id = " + id)`, f-strings in SQL, `${variable}` inside query strings.
+Fix: use parameterized queries (`$1`, `?`, `:param`), prepared statements, or ORM bindings.
+This applies to SQL, NoSQL (`$where`, `$ne` operators), LDAP, and OS commands.
+Injection attacks are the most exploited vulnerability class and are trivially preventable.
+
+## Data Privacy & PII
+
+<!-- Source: canopy-mvp (org) -->
+### Never disable TLS/SSL verification
+Check for: `rejectUnauthorized: false`, `verify=False`, `InsecureSkipVerify: true`, `NODE_TLS_REJECT_UNAUTHORIZED=0`.
+Flag as CRITICAL if found in any HTTP client, database connection, or API call.
+Fix: use proper certificate chains. For local dev, use mkcert to create locally-trusted certificates.
+Never accept self-signed certificates in application code. Disabling TLS makes all traffic vulnerable to interception.
+
+## Authorization & Access Control
+
+<!-- Source: canopy-mvp (org) -->
+### Authorization on every endpoint
+Check for: API endpoints that check authentication (who you are) but skip authorization (what you can do).
+Flag: missing ownership checks on object-level routes (`GET/PUT/DELETE /:id`), admin endpoints without role verification.
+Required: verify the authenticated caller is authorized for the specific operation on the specific resource.
+Never rely on client-side route guards as the only access control. Enforce server-side.
+BOLA/IDOR (accessing other users' data by changing an ID) is the #1 API vulnerability.
+
+## Destructive Operations
+
+<!-- Source: canopy-mvp (org) -->
+### No unguarded destructive operations
+Check for: DELETE without WHERE, DROP TABLE, `rm -rf`, `git push --force`, `git reset --hard` without explicit confirmation.
+Flag: any operation that deletes data, drops tables, resets state, or modifies production infrastructure without a guard.
+Required: explicit confirmation flag, soft deletes preferred over hard deletes, rollback scripts for migrations.
+AI tools must never autonomously execute irreversible destructive operations.
