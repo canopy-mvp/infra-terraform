@@ -1,0 +1,19 @@
+---
+description: Coding conventions & standards from Canopy (canopy-mvp, locked)
+globs:
+alwaysApply: true
+---
+
+# Conventions
+
+<!-- Source: canopy-mvp (org) -->
+## structured logging
+ALWAYS log as JSON with fields: timestamp, level, message, context (userId, requestId, operation). Example: `{"timestamp": "2024-01-15T10:30:00Z", "level": "error", "message": "User auth failed", "userId": "u123"}`. Never log plain text or omit request IDs.
+
+<!-- Source: canopy-mvp (org) -->
+## tailwind css usage
+MUST use Tailwind CSS classes exclusively — NEVER use inline styles. Example: `className="fixed inset-0 bg-black/50 flex items-center justify-center"` not `style={{...}}`. See .cursorrules for Tailwind configuration.
+
+<!-- Source: canopy-mvp (org) -->
+## error response format
+ALWAYS return errors as `{ error: { code: "ERROR_CODE", message: "description" } }`. Example: `{ error: { code: "MISSING_PARAMETER", message: "reference_id is required" } }`. See API standards for full spec.
